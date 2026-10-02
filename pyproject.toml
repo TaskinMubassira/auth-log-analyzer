@@ -23,3 +23,5 @@ packages = ["log_analyzer"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Lets the tests import the package straight from the project folder (no install needed).
+pythonpath = ["."]
