@@ -72,3 +72,19 @@ def test_cli_exit_code_and_formats(capsys, fmt):
     code = main([str(SAMPLES / "auth.log"), "--year", "2026", "--format", fmt])
     assert code == 2
     assert "203.0.113.99" in capsys.readouterr().out
+
+
+def test_parse_since_relative_and_absolute():
+    from log_analyzer.cli import parse_since
+
+    now = datetime(2026, 10, 2, 12, 0)
+    assert parse_since("24h", now) == datetime(2026, 10, 1, 12, 0)
+    assert parse_since("7d", now) == datetime(2026, 9, 25, 12, 0)
+    assert parse_since("2026-10-02 03:20") == datetime(2026, 10, 2, 3, 20)
+
+
+def test_since_filters_out_older_events(capsys):
+    # Only the 03:20 onwards part of the sample: the guessed password, not the earlier brute force.
+    main([str(SAMPLES / "auth.log"), "--year", "2026", "--since", "2026-10-02 03:20", "--format", "csv"])
+    out = capsys.readouterr().out
+    assert "203.0.113.99" in out and "203.0.113.45" not in out

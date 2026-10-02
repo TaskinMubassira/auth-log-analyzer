@@ -49,6 +49,7 @@ python -m log_analyzer samples/auth.log                 # SSH logins
 python -m log_analyzer samples/access.log               # Nginx / Apache
 python -m log_analyzer /var/log/auth.log --format json  # real server, JSON output
 python -m log_analyzer access.log.2.gz --format csv > report.csv
+python -m log_analyzer /var/log/auth.log --since 24h      # only the last 24 hours
 pytest
 ```
 
